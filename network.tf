@@ -50,28 +50,28 @@ resource "oci_core_route_table" "adb_rt_via_natgw_and_sg" {
 }
 
 resource "oci_core_network_security_group" "adb_nsg" {
-  count          = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
+  #count          = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
   compartment_id = var.compartment_ocid
   display_name   = "adb_nsg"
-  vcn_id         = oci_core_vcn.adb_vcn[0].id
+  vcn_id         = var.vcn_id
   defined_tags   = var.defined_tags
 }
 
 resource "oci_core_network_security_group_security_rule" "adb_nsg_egress_group_sec_rule" {
-  count                     = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
+  #count                     = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
   network_security_group_id = oci_core_network_security_group.adb_nsg[0].id
   direction                 = "EGRESS"
   protocol                  = "6"
-  destination               = var.vcn_cidr
+  destination               = var.vcn_cidrs
   destination_type          = "CIDR_BLOCK"
 }
 
 resource "oci_core_network_security_group_security_rule" "adb_nsg_ingress_group_sec_rule" {
-  count                     = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
+  #count                     = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
   network_security_group_id = oci_core_network_security_group.adb_nsg[0].id
   direction                 = "INGRESS"
   protocol                  = "6"
-  source                    = var.vcn_cidr
+  source                    = var.vcn_cidrs
   source_type               = "CIDR_BLOCK"
   tcp_options {
     destination_port_range {
