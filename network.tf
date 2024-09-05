@@ -82,10 +82,10 @@ resource "oci_core_network_security_group_security_rule" "adb_nsg_ingress_group_
 }
 
 resource "oci_core_subnet" "adb_subnet" {
-  count                      = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
+  #count                      = (!var.use_existing_vcn && var.adb_private_endpoint) ? 1 : 0
   cidr_block                 = var.adb_subnet_cidr
   compartment_id             = var.compartment_ocid
-  vcn_id                     = oci_core_vcn.adb_vcn[0].id
+  vcn_id                     = var.vcn_id
   display_name               = "adb_subnet"
   dns_label                  = "adbnet"
   security_list_ids          = [oci_core_vcn.adb_vcn[0].default_security_list_id]
